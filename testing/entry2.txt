@@ -1,0 +1,6 @@
+{
+    "line1": "Roosevelt Way NE",
+    "city": "Seattle",
+    "state": "WA",
+    "zip": "98115"
+}

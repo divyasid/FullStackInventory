@@ -1,0 +1,6 @@
+{
+    "line1": "Massachusetts Hall",
+    "city": "Cambridge",
+    "state": "MA",
+    "zip": "02138"
+}
