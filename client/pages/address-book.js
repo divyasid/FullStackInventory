@@ -21,7 +21,33 @@ export const getStaticProps = async () => {
       props: { data }
     }
   }
+// export const getStaticProps = async () => {
+//     //   const url = 'http://localhost:3001?contains=' + new URLSearchParams({
+//     //     contains: 'divya'
+//     // }))
+//   //     const res = await fetch('http://localhost:3001?contains=' + new URLSearchParams('MA'))
+  
+//       const data = await fetchAddresses();
+//     
+//       return {
+//         props: { data }
+//       }
+//     }
+  
+  const fetchAddresses = async (query) => {
 
+    let query_url = "http://localhost:3001";
+      if (query) {
+        query_url += `?contains=${query}`;
+      }
+      const res = await fetch(query_url);
+      const data = await res.json();
+      return data;
+    
+    }
+  // Search API
+  // Delete API
+  // Post Api
 
 // async function getStaticProps () {
 //   //   const url = 'http://localhost:3001?contains=' + new URLSearchParams({
@@ -42,7 +68,7 @@ export default function Home({data}) {
   // console.log(data)
   // True is Edit, False is Add
   // var state = true
-  const [addressList, setAddressList] = useState([data]);
+  const [addressList, setAddressList] = useState(data);
   const [searchInput, setSearchInput] = useState('');
   let editState = true;
   let addState = true;
@@ -65,26 +91,29 @@ export default function Home({data}) {
 
 //   }
 
-const handleChange = (chilData) => {
+const handleChange = async (chilData) => {
 
-  // console.log('searching', chilData)
+  console.log('searching', chilData)
 
   setSearchInput(chilData.value)
+  let data = await fetchAddresses(chilData.value)
+  console.log('xyz',data)
+  setAddressList(data)
 
-  var temp = [chilData];
+  // var temp = [chilData];
   
   // addressList.forEach(function(entry) {
   //   console.log('lkj',entry);
   // });
 
-  addressList.forEach(function (x) {
-    // x.forEach(function (y) {
-      // console.log('y)
-    let newAddressList = x.filter((address)=>{
-      Object.values(address).includes(chilData.value)
-    })
-    console.log('xyz',newAddressList)
-    });
+  // addressList.forEach(function (x) {
+  //   // x.forEach(function (y) {
+  //     // console.log('y)
+  //   let newAddressList = x.filter((address)=>{
+  //     Object.values(address).includes(chilData.value)
+  //   })
+  //   console.log('xyz',newAddressList)
+  //   });
 
 // });
 
@@ -115,11 +144,14 @@ const handleChange = (chilData) => {
   
  }
 
-  useEffect(()=>{
-    console.log('useEffect')
-    // getAddresses()
+  // useEffect(async()=>{
+  //   console.log('useEffect')
+  //   // getAddresses()
+  //   const data = await fetchAddresses(searchInput);
+  //   
+  //    setAddressList(data)
     
-  },[addressList]);
+  // },[searchInput]);
   
   const address = {
     "line1": "Massachusetts Hall",
@@ -152,8 +184,8 @@ const handleChange = (chilData) => {
 
 
 
-        { data.length > 0 &&
-          data.map((address)=>{
+        { addressList.length > 0 &&
+          addressList.map((address)=>{
             let {id, city, line1, state, zip} = address;
 
             return(

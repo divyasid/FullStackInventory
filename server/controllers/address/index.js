@@ -20,8 +20,9 @@ module.exports = {
       id,
     };
 
+    log('withid',withId)
     validate( addressSchema, withId );
-
+    
     await redis.HSET( ADDRESSES, withId.id, serialize( withId ) );
 
     return id;

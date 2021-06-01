@@ -1,20 +1,25 @@
+
 const express = require( 'express' );
 const app = express();
 var cors = require('cors')
+var corsOptions = {
+    origin: '*'
+  }
+app.use(cors(corsOptions))
 app.use(express.json());
 app.use(express.urlencoded({extended:false}))
-app.use(cors())
 const addressController = require( './controllers/address/index' );
 const redis = require( './singletons/redis' );
+
 // :todo: may be to a file
 const log = console.log;
 
 
-const addr1 = { line1: '185 Berry St', city: 'San Francisco', state: 'CA', zip: '94107' };
+// const addr1 = { line1: '185 Berry St', city: 'San Francisco', state: 'CA', zip: '94107' };
 
 app.post( '/', async ( req, res ) => {
   log("http post body: ", req.body)
-  res.append("Access-Control-Allow-Origin", "*")
+  // res.append("Access-Control-Allow-Origin", "*")
   if (req.body === null || Object.keys(req.body).length === 0 ) {
     res.json({error: "No expected Body"});
     return;

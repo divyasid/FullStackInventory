@@ -60,12 +60,13 @@ function clickSave() {
         "Access-Control-Allow-Origin": "*"
       },
     
-      body: inputState,
+      body: JSON.stringify(inputState),
     })
     .then(response => response.json())
     .then(data => {
       setShowState(childData)
       console.log('Success:', data);
+      window.location.reload();
     })
     .catch((error) => {
       setShowState(childData)
@@ -124,7 +125,7 @@ function clickSave() {
             type='showing'
             action='add'
             variant="secondary">Edit</Button>
-            <Button variant="error">Delete</Button>        
+            <Button onClick={()=> clickDelete} variant="error">Delete</Button>        
           </>
         }
       </div>

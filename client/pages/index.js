@@ -27,28 +27,26 @@ export default function Home( {data} ) {
   // }
   // createAddress()
 
-  // async function deleteAddress() {
-  //   const response = await fetch(`http://localhost:3001`, {
-  //     body: JSON.stringify({
-  //       "line1": "7610 kirwin lane",
-  //       "city": "Cambridge",
-  //       "state": "MA",
-  //       "zip": "02138"
-  //     }),
-  //       method: 'DELETE',
-  //       mode: 'no-cors',
-  //       headers: {
-  //         "Access-Control-Allow-Origin": "*",
-  //         "Access-Control-Request-Method": "cross-site",
-  //         "Referrer-Policy":"unsafe-url",
-  //         "Content-Type": "application/json"
-  //       }
-  //       });
-  //   //await response.json();
-  //   const result = await response.text();
-  //   console.log("response: ", response);
-  //   console.log("result: ", result);
-  // }
+  async function deleteAddress() {
+    const response = await fetch(`http://localhost:3001`, {
+      body: JSON.stringify({
+        "line1": "7610 kirwin lane",
+        "city": "Cambridge",
+        "state": "MA",
+        "zip": "02138"
+      }),
+        method: 'DELETE',
+       
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+        });
+    //await response.json();
+    const result = await response.text();
+    console.log("response: ", response);
+    console.log("result: ", result);
+  }
 
   // async function updateAddress() {
   //   const response = await fetch(`http://localhost:3001`, {
