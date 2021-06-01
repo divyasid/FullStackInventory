@@ -1,14 +1,14 @@
 import styles from './button.module.scss'
 import React, { useState } from 'react';
 
-export default function Button({ children, variant, type, action, pCB, disabled }) {
+export default function Button({ children, variant, type, action, pCB, disabled, objectId}) {
   const [showState, setShowState] = useState(false);
 
   const handleClick = (e) => {
     console.log('value_shoe', true)
     setShowState(true)
     if (action === 'delete') {
-      pCB();
+      pCB(objectId);
     } else if (type === 'showing') {
       if (action === 'save') {
         pCB(false)

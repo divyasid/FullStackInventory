@@ -6,7 +6,6 @@ const uuid = require( 'uuid' ).v4;
 const redis = require( '../../singletons/redis' );
 const ADDRESSES = 'addresses';
 
-// eslint-disable-next-line
 const log = console.log;
 
 module.exports = {
@@ -27,17 +26,6 @@ module.exports = {
 
     return id;
   },
-
-// all keys
-  // async matchingkeys(keypat ) {
-  //   const keys = await redis.HKEYS( ADDRESSES );
-  //   return Object.values( keys )
-  //     .map( ( buffer ) => deserialize( buffer ) )
-  //   .filter( ( key ) => {
-  //     return key.toLowerCase().includes(keypat.toLowerCase());
-  //   });    
-  // },
-
 
   async update( id, newData ) {
     log( 'updating', id );
@@ -64,10 +52,7 @@ module.exports = {
   async search( searchString = '' ) {
     log( 'searching', searchString );
 
-    // hint for the interview: Why won't this work in production? -> you don't want to make api call for every letter you type
-    // on every request its doing this
-    // filter in db, pagination, sorting 
-
+    // hint for the interview: Why won't this work in production? 
     const addresses = await redis.HGETALL( ADDRESSES );
 
     return Object.values( addresses )

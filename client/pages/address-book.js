@@ -6,13 +6,12 @@ import React, { useState, useEffect } from 'react';
 
 
 export const getStaticProps = async () => {
-  const query_url = "http://localhost:3001/v1/addresses?contains=A";
+  const query_url = "http://localhost:3001/v1/addresses?contains=";
   const res = await fetch(query_url);
   const data = await res.json();
   return {
     props: { data }
   }
-
 }
 
 const fetchAddresses = async (query) => {
@@ -26,19 +25,27 @@ const fetchAddresses = async (query) => {
 }
 
 export default function Home({ data }) {
+  console.log('abc', data)
+  const [addressList, setAddressList] = useState(data);
   const [searchInput, setSearchInput] = useState('');
   let editState = true;
   let addState = true;
 
   const handleChange = async (chilData) => {
+
+    // console.log('searching', chilData)
+
     setSearchInput(chilData.value)
     let data = await fetchAddresses(chilData.value)
 
     // setAddressList(data)
+
     // var temp = [chilData];
+
     // addressList.forEach(function(entry) {
     //   console.log('lkj',entry);
     // });
+
     // addressList.forEach(function (x) {
     //   // x.forEach(function (y) {
     //     // console.log('y)
@@ -47,6 +54,7 @@ export default function Home({ data }) {
     //   })
     //   console.log('xyz',newAddressList)
     //   });
+
     // });  
   }
 
@@ -57,7 +65,6 @@ export default function Home({ data }) {
       </Head>
       <h1 className="mb-8">Address Book</h1>
       <div className="w-full md:w-1/2">
-        {/* <button onclick={showAllCards()}>Get all</button> */}
         <Input
           icon="icon-search.svg"
           // label='search'

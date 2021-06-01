@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 
 
 export default function Card({ children, addState, editState, street, city, state, zip, line, id }) {
-
   let _inputState = {
     line1: "",
     city: "",
@@ -29,23 +28,16 @@ export default function Card({ children, addState, editState, street, city, stat
   const [inputState, setinputState] = useState(_inputState);
 
   function handleDelete(childData) {
-    console.log('inputid', inputState.id)
-    console.log('childdata', childData)
-
-    const delete_url = "http://localhost:3001/v1/addresses/" + inputState.id;
+    console.log('handleDelete:', childData)
+    const delete_url = "http://localhost:3001/v1/addresses/" + childData;
     fetch(delete_url, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-
-      // body: JSON.stringify(inputState.id),
+      method: 'DELETE'
     })
       .then(response => response.json())
       .then(data => {
         setShowState(childData)
         console.log('Success:', data);
-        // window.location.reload();
+        window.location.reload();
       })
       .catch((error) => {
         setShowState(childData)
@@ -56,19 +48,14 @@ export default function Card({ children, addState, editState, street, city, stat
   }
 
   function handleShow(childData) {
-
     let method;
-
     if (addState) {
       method = 'POST';
     } else if (editState) {
       method = 'PUT';
     }
 
-
     if (!childData) {
-
-
       fetch('http://localhost:3001/v1/addresses', {
         method: method,
         headers: {
@@ -127,7 +114,7 @@ export default function Card({ children, addState, editState, street, city, stat
                 type='showing'
                 action='add'
                 variant="secondary">Edit</Button>
-              <Button onClick={() => clickDelete} pCB={handleDelete} action='delete' variant="error">Delete</Button>
+              <Button onClick={() => clickDelete} pCB={handleDelete} action='delete' objectId={_inputState.id} variant="error">Delete</Button>
             </>
           }
         </div>

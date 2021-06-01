@@ -1,9 +1,7 @@
-
 const express = require('express');
 const cors = require('cors')
 const addressController = require('./controllers/address/index');
 const redis = require('./singletons/redis');
-
 
 const corsOptions = {
   origin: 'http://localhost:3000',
@@ -13,7 +11,6 @@ const corsOptions = {
 const app = express();
 app.use(cors(corsOptions))
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }))
 
 // :todo: potentially may be to a file
 const log = console.log;
@@ -39,7 +36,7 @@ app.post('/v1/addresses', async (req, res) => {
 
 app.get('/v1/addresses', async (req, res) => {
   var searchstr = req.query.contains;
-  if (searchstr.length === 0) {
+  if (searchstr == null || searchstr.length === 0) {
     searchstr = '';
   }
   log("get key value: ", searchstr);
@@ -54,8 +51,8 @@ app.get('/v1/addresses', async (req, res) => {
 
 app.delete('/v1/addresses/:objid', async (req, res) => {
   // :todo: some error check if key not present?
-
-  const delete_id = res.params.objid;
+  log("delete req.", req.params);
+  const delete_id = req.params.objid;
   if (delete_id.length === 0) {
     res.json({ error: "No ObjectId to Delete" })
     return
