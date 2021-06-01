@@ -1,112 +1,104 @@
 
-const express = require( 'express' );
+const express = require('express');
+const cors = require('cors')
+const addressController = require('./controllers/address/index');
+const redis = require('./singletons/redis');
+
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  exposedHeaders: ['Content-Type', 'application/json']
+}
+
 const app = express();
-var cors = require('cors')
-var corsOptions = {
-    origin: '*'
-  }
 app.use(cors(corsOptions))
 app.use(express.json());
-app.use(express.urlencoded({extended:false}))
-const addressController = require( './controllers/address/index' );
-const redis = require( './singletons/redis' );
+app.use(express.urlencoded({ extended: false }))
 
-// :todo: may be to a file
+// :todo: potentially may be to a file
 const log = console.log;
 
-
-// const addr1 = { line1: '185 Berry St', city: 'San Francisco', state: 'CA', zip: '94107' };
-
-app.post( '/', async ( req, res ) => {
+app.post('/v1/addresses', async (req, res) => {
   log("http post body: ", req.body)
-  // res.append("Access-Control-Allow-Origin", "*")
-  if (req.body === null || Object.keys(req.body).length === 0 ) {
-    res.json({error: "No expected Body"});
+  if (req.body === null || Object.keys(req.body).length === 0) {
+    res.json({ error: "No expected Body" });
     return;
   }
   try {
-    // :todo: should we check if already present, so reject?
+    // :todo: check if already present, so reject?
     const addrId = await addressController.add(req.body);
     const addr = await addressController.get(addrId);
     res.json(addr);
   } catch (error) {
     log(error);
     // :todo: may need better rerport
-    res.json({error: "Entry create failed"});
+    res.json({ error: "Entry create failed" });
   }
 });
 
-// // TEST DUMMY
-// app.get( '/', ( req, res ) => {
-//   console.log("get from server.js is called");
-//   res.send({"get": "called"});
-// });
 
-
-app.get( '/', async ( req, res) => {
-  // :todo: some error check if key not present?
-  log('LOOKOKHEHEHEHHERHEHREH')
-  log(req.query)
-  log("get key value: ", req.query.contains);
-  // res.setHeader('Content-Type', 'application/json')
-  // res.statusCode = 200
+app.get('/v1/addresses', async (req, res) => {
+  var searchstr = req.query.contains;
+  if (searchstr.length === 0) {
+    searchstr = '';
+  }
+  log("get key value: ", searchstr);
   try {
-    const adrs = await addressController.search(req.query.contains);
-    // res.end(JSON.stringify(adrs))
+    const adrs = await addressController.search(searchstr);
     res.json(adrs);
   } catch (error) {
     // :todo: better error reporting; for now, send empty
     res.json([])
   }
-  // res.json({result:"OK"})
-
-  
 });
 
-app.delete('/', async ( req, res ) => {
-   // :todo: some error check if key not present?
-  log("get query paramater id: ", req.query.contains);
+app.delete('/v1/addresses/:objid', async (req, res) => {
+  // :todo: some error check if key not present?
+
+  const delete_id = res.params.objid;
+  if (delete_id.length === 0) {
+    res.json({ error: "No ObjectId to Delete" })
+    return
+  }
+  log("delete get query paramater id: ", delete_id);
   try {
-    adrs = await addressController.search(req.query.contains);
-    for (item of adrs) {
-      await addressController.delete(item.id);
-    }
-    res.json({ result: "OK", items: adrs.length});
+    await addressController.delete(delete_id);
+    res.json({ result: "OK", items: 1 });
   } catch (error) {
     log(error);
-    res.json({error: "Entry may not exist"});
+    res.json({ error: "Entry may not exist" });
   }
 });
 
-app.put('/', async ( req, res ) => {
+app.put('/v1/addresses', async (req, res) => {
   log("http put body: ", req.body)
   var adrs;
   try {
     adrs = await addressController.search(req.body.id);
     if (adrs.length == 0) {
-      res.json({error: "No Entry to update"});
+      res.json({ error: "No Entry to update" });
       return;
     }
     if (adrs.length != 1) {
-      res.json({error: "Rejected as matching more than one 1 Entry to update"});
+      res.json({ error: "Rejected as matching more than one 1 Entry to update" });
       return;
     }
   } catch (error) {
     log(error);
-    res.json({error: "Entry does not exist"})
+    res.json({ error: "Entry does not exist" })
     return;
   }
   log("current item: ", adrs[0])
   log("updating: ", req.body)
   try {
-    await addressController.update( req.body.id, req.body);
-    res.json({result: "OK"});
+    await addressController.update(req.body.id, req.body);
+    res.json({ result: "OK" });
   } catch (error) {
-    // :todo: can we decode and do better reporting
+    // :todo: decode and do better reporting
     log(error);
-    res.json({error: "Entry update failed"})
+    res.json({ error: "Entry update failed" })
   }
 });
 
 console.log("listening on port: ", process.env.PORT)
-app.listen( process.env.PORT );
+app.listen(process.env.PORT);

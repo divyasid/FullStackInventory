@@ -1,1 +1,0 @@
-{"line1":"FooBar","city":"Cambridge","state":"MA","zip":"02138","id":"addr_d2079e50-463b-4f71-a663-380f947f45f6"}

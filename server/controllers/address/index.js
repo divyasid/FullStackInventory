@@ -65,7 +65,8 @@ module.exports = {
     log( 'searching', searchString );
 
     // hint for the interview: Why won't this work in production? -> you don't want to make api call for every letter you type
-    // better way would be once you get data in frontend filter those objects
+    // on every request its doing this
+    // filter in db, pagination, sorting 
 
     const addresses = await redis.HGETALL( ADDRESSES );
 
