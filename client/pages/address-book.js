@@ -38,7 +38,7 @@ export default function Home({ data }) {
     setSearchInput(chilData.value)
     let data = await fetchAddresses(chilData.value)
 
-    // setAddressList(data)
+    setAddressList(data)
 
     // var temp = [chilData];
 
